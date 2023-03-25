@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -30,9 +32,44 @@ class MyApp extends StatelessWidget {
 }
 
 class spaceShooterGame extends StatefulWidget {
-
   @override
   spaceShooterGameState createState() => spaceShooterGameState();
+}
+
+class spaceShooterGameState extends State<spaceShooterGame> {
+  final Offset spaceShuttleLeftPoint = Offset(150, 400);
+  final Offset spaceShuttleTopPoint = Offset(200, 300);
+  final Offset spaceShuttleRightPoint = Offset(250, 400);
+  final List<Offset> leftGunCoordinates = [
+    Offset(150 + (200 - 150) / 2, 400 - (400 - 300) / 2)
+  ];
+
+  void fillLeftGunCoordinates() {
+    leftGunCoordinates
+        .add(Offset(leftGunCoordinates[0].dx + 10, leftGunCoordinates[0].dy));
+    leftGunCoordinates.add(
+        Offset(leftGunCoordinates[0].dx + 10, leftGunCoordinates[0].dy + 20));
+    leftGunCoordinates
+        .add(Offset(leftGunCoordinates[0].dx, leftGunCoordinates[0].dy + 20));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    fillLeftGunCoordinates();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: CustomPaint(
+            painter: spaceShuttle(
+                leftpoint: spaceShuttleLeftPoint,
+                topPoint: spaceShuttleTopPoint,
+                rightPoint: spaceShuttleRightPoint,
+                leftGunCoordinates: leftGunCoordinates)));
+  }
 }
 
 class spaceShuttle extends CustomPainter {
@@ -42,17 +79,16 @@ class spaceShuttle extends CustomPainter {
   final double gunWidth = 10;
   final double gunheight = 20;
   final List<Offset> leftGunCoordinates;
-  spaceShuttle(
-      {required this.leftpoint,
-      required this.topPoint,
-      required this.rightPoint,
-      
-      });
+  spaceShuttle({
+    required this.leftpoint,
+    required this.topPoint,
+    required this.rightPoint,
+    required this.leftGunCoordinates,
+  });
 
   void drawLeftGun(Path path) {
-    path.moveTo(leftpoint.dx + (topPoint.dx - leftpoint.dx) / 2,
-        leftpoint.dy - (leftpoint.dy - topPoint.dy) / 2);
-    path.lineTo(x, y)
+    path.moveTo(leftGunCoordinates[0].dx, leftGunCoordinates[0].dy);
+    path.lineTo(leftGunCoordinates[1].dx, leftGunCoordinates[1].dy);
   }
 
   @override
